@@ -1,0 +1,58 @@
+# FastAPI & Server
+
+uvicorn[standard]==0.24.0
+python-multipart>=0.0.6
+
+# Pydantic for validation
+
+pydantic>=2.7.4,<3.0.0
+
+
+# Authentication
+PyJWT==2.8.0
+bcrypt==4.1.1
+
+# Database
+sqlalchemy==2.0.23
+psycopg2-binary==2.9.9  # PostgreSQL (optional, for production)
+
+# Google Gemini AI (matching Unthinkable structure)
+google-genai>=0.3.0
+
+# LangChain for RAG
+langchain>=0.1.0
+langchain-community==0.3.31
+langchain-core==0.3.79
+langchain-openai==0.3.35
+langchain-text-splitters==0.3.11
+langsmith==0.4.37
+
+# Vector Database (ChromaDB)
+chromadb>=0.4.0
+
+# Document Generation
+python-docx==1.1.0
+python-pptx==0.6.23
+Pillow==10.1.0
+
+# PDF Processing (if needed)
+PyPDF2==3.0.1
+pypdf==3.17.4
+
+# Utils
+python-dotenv==1.0.0
+httpx>=0.28.1
+numpy==1.26.2
+
+# Optional: For better performance
+aiofiles==23.2.1
+
+fastapi==0.119.0
+transformers==4.56.0
+torch==2.7.1+cu118
+
+pandas==2.3.2
+
+opencv-python>=4.5.0
+boto3>=1.28.0
+pyspark>=3.4.0
