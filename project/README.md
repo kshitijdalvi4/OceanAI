@@ -1,18 +1,24 @@
-# 🎯 Smart Resume Screener
+# 🌊 OceanAI Document Generation Platform
 
-> An AI-powered resume screening system using RAG (Retrieval Augmented Generation) and LLMs to intelligently match candidates with job descriptions.
-[Demo Video Link](https://www.loom.com/share/18f4744ce9df491f9ff4dd6f7a089278?sid=04eac1be-63a8-471a-bcb9-633b14f215d8)
+> An AI-powered document authoring system using RAG (Retrieval Augmented Generation) and LLMs to intelligently generate, refine, and manage professional business documents.
+
 ---
 
+## 🎯 Problem Statement
 
+Creating professional business documents (Word docs, PowerPoint presentations) is time-consuming and requires:
+- Hours of research and content creation
+- Consistent formatting and structure
+- Multiple revision cycles
+- Context awareness across sections
 
 ### Our Solution
-An intelligent resume screening system that:
-1. **Automatically extracts** structured data from PDF resumes
-2. **Semantically matches** candidates to job descriptions using AI
-3. **Provides justifications** for match scores (explainable AI)
-4. **Enables Q&A** about candidates using RAG-powered chat
-
+An intelligent document generation platform that:
+1. **Automatically generates** structured business documents from topics
+2. **Maintains context** across sections using RAG
+3. **Enables iterative refinement** with natural language prompts
+4. **Provides AI-powered outlines** to jumpstart document creation
+5. **Exports ready-to-use** .docx and .pptx files
 
 ---
 
@@ -23,7 +29,7 @@ An intelligent resume screening system that:
 │                        USER INTERFACE                           │
 │                   (React + TypeScript + Tailwind)               │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐           │
-│  │Upload Resumes│  │  Match Jobs  │  │Chat w/Resume │           │
+│  │Create Project│  │Generate Docs │  │ Refine & Chat│           │
 │  └──────────────┘  └──────────────┘  └──────────────┘           │
 └─────────────────────────────────────────────────────────────────┘
                               ▼
@@ -31,24 +37,25 @@ An intelligent resume screening system that:
 │                      FASTAPI BACKEND                            │
 │  ┌──────────────────────────────────────────────────────────┐   │
 │  │                   API ENDPOINTS                          │   │
-│  │  POST /upload-resume/    │  POST /match-job/             │   │
-│  │  POST /chat-resume/      │  GET  /candidates/            │   │
+│  │  POST /api/projects/         │  POST /generate/          │   │
+│  │  POST /refine/               │  GET  /export/            │   │
+│  │  POST /suggest-outline/      │  POST /chat/              │   │
 │  └──────────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────────┘
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                     PROCESSING LAYER                            │
 │  ┌────────────────┐  ┌────────────────┐  ┌─────────────────┐    │
-│  │  PDF Parser    │  │  LLM Engine    │  │  RAG Pipeline   │    │
-│  │  (PyPDF)       │  │  (Gemini 2.0)  │  │  (LangChain)    │    │
+│  │Content Memory  │  │  LLM Engine    │  │  RAG Pipeline   │    │
+│  │    Buffer      │  │  (Gemini 2.0)  │  │  (LangChain)    │    │
 │  └────────────────┘  └────────────────┘  └─────────────────┘    │
 └─────────────────────────────────────────────────────────────────┘
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                      STORAGE LAYER                              │
 │  ┌────────────────┐  ┌────────────────┐  ┌─────────────────┐    │
-│  │  Vector DB     │  │  File Storage  │  │  Embeddings     │    │
-│  │  (ChromaDB)    │  │  (Local/S3)    │  │  (Gemini API)   │    │
+│  │  Vector DB     │  │   SQLite DB    │  │  Embeddings     │    │
+│  │  (ChromaDB)    │  │  (SQLAlchemy)  │  │  (Gemini API)   │    │
 │  └────────────────┘  └────────────────┘  └─────────────────┘    │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -59,10 +66,12 @@ An intelligent resume screening system that:
 |-----------|------------|---------|
 | **Frontend** | React 18, TypeScript, Tailwind CSS | Modern, responsive UI |
 | **Backend** | FastAPI, Python 3.10+ | RESTful API server |
-| **LLM** | Google Gemini 2.0 Flash | Text generation & analysis |
+| **Authentication** | JWT + bcrypt | Secure user management |
+| **LLM** | Google Gemini 2.0 Flash Lite | Text generation & analysis |
 | **Embeddings** | Gemini text-embedding-004 | Semantic vector generation |
-| **Vector DB** | ChromaDB | Similarity search |
-| **Document Parser** | PyPDF | PDF text extraction |
+| **Vector DB** | ChromaDB | Context-aware memory storage |
+| **Database** | SQLite + SQLAlchemy | Project & content management |
+| **Document Export** | python-docx, python-pptx | .docx/.pptx generation |
 | **RAG Framework** | LangChain | RAG orchestration |
 
 ---
@@ -70,51 +79,101 @@ An intelligent resume screening system that:
 ## 🔄 RAG Pipeline Architecture
 
 ### What is RAG?
-**Retrieval Augmented Generation** combines information retrieval with LLM generation to provide accurate, context-aware responses.
+**Retrieval Augmented Generation** combines information retrieval with LLM generation to provide context-aware, consistent document generation.
 
 ### Our RAG Implementation
 
+```
+┌──────────────────────────────────────────────────────────────┐
+│                    Content Generation Flow                   │
+└──────────────────────────────────────────────────────────────┘
+                              ▼
+        ┌─────────────────────────────────────────┐
+        │  1. User Creates Project                │
+        │     - Title, Topic, Document Type       │
+        └─────────────────────────────────────────┘
+                              ▼
+        ┌─────────────────────────────────────────┐
+        │  2. AI Suggests Outline (Optional)      │
+        │     - 6-8 sections for Word             │
+        │     - 8-10 slides for PowerPoint        │
+        └─────────────────────────────────────────┘
+                              ▼
+        ┌─────────────────────────────────────────┐
+        │  3. Content Generation (Section-wise)   │
+        │     ┌─────────────────────────────────┐ │
+        │     │ a. Query ContentMemoryBuffer    │ │
+        │     │    (Get previous sections)      │ │
+        │     └─────────────────────────────────┘ │
+        │     ┌─────────────────────────────────┐ │
+        │     │ b. Generate content with context│ │
+        │     │    using Gemini LLM             │ │
+        │     └─────────────────────────────────┘ │
+        │     ┌─────────────────────────────────┐ │
+        │     │ c. Store in ContentMemoryBuffer │ │
+        │     │    (ChromaDB vector storage)    │ │
+        │     └─────────────────────────────────┘ │
+        └─────────────────────────────────────────┘
+                              ▼
+        ┌─────────────────────────────────────────┐
+        │  4. Iterative Refinement                │
+        │     - User provides natural language    │
+        │       refinement prompt                 │
+        │     - RAG retrieves relevant context    │
+        │     - Generates refined version         │
+        │     - Maintains version history         │
+        └─────────────────────────────────────────┘
+                              ▼
+        ┌─────────────────────────────────────────┐
+        │  5. Export Document                     │
+        │     - Combine all sections              │
+        │     - Apply formatting                  │
+        │     - Generate .docx or .pptx           │
+        └─────────────────────────────────────────┘
+```
 
+### ContentMemoryBuffer: The Core Innovation
 
-![Upload Screenshot](docs/images/Architechture-RAG.png)
-*RAG Architechture*
-
-
-### RAG Pipeline Code Flow
+The **ContentMemoryBuffer** is a custom RAG implementation that maintains project context:
 
 ```python
-# 1. Document Loading
-loader = PyPDFLoader("resume.pdf")
-documents = loader.load()
-
-# 2. Text Splitting
-text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=1000,
-    chunk_overlap=150
-)
-chunks = text_splitter.split_documents(documents)
-
-# 3. Embedding & Storage
-embeddings = GeminiEmbeddings(client)
-vectorstore = Chroma.from_documents(
-    documents=chunks,
-    embedding=embeddings,
-    collection_name="resumes"
-)
-
-# 4. Retrieval (on query)
-retriever = vectorstore.as_retriever(
-    search_kwargs={
-        "k": 4,
-        "filter": {"candidate_id": "candidate_123"}
-    }
-)
-
-# 5. Question Answering
-context = retriever.get_relevant_documents(question)
-prompt = f"Context: {context}\n\nQuestion: {question}\n\nAnswer:"
-response = gemini_client.models.generate_content(prompt)
+class ContentMemoryBuffer:
+    """
+    Manages context and memory for document generation using RAG.
+    Stores all generated content in ChromaDB for context-aware refinements.
+    """
+    
+    def __init__(self, project_id: int):
+        self.project_id = project_id
+        self.collection_name = f"project_{project_id}"
+        self.collection = chroma_client.get_or_create_collection(
+            name=self.collection_name
+        )
+    
+    def add_content(self, section_id: str, title: str, 
+                    content: str, metadata: Dict):
+        """Store generated content with embeddings"""
+        embedding = embeddings.embed_query(content)
+        self.collection.add(
+            documents=[content],
+            embeddings=[embedding],
+            metadatas=[metadata],
+            ids=[f"{project_id}_{section_id}_{uuid}"]
+        )
+    
+    def query_context(self, query: str, n_results: int = 3):
+        """Retrieve relevant context for refinement"""
+        return self.collection.query(
+            query_texts=[query],
+            n_results=n_results
+        )
 ```
+
+**Benefits:**
+- ✅ Maintains consistency across document sections
+- ✅ Context-aware refinements (knows what was written before)
+- ✅ Enables intelligent Q&A about document content
+- ✅ Version control with semantic search
 
 ---
 
@@ -122,26 +181,47 @@ response = gemini_client.models.generate_content(prompt)
 
 ### 🎯 Core Functionality
 
-- **📤 Resume Upload**
-  - PDF resume parsing
-  - Automatic metadata extraction (name, email, skills, experience)
-  - Duplicate detection
+- **📝 Project Management**
+  - Create unlimited projects
+  - Choose between Word (.docx) or PowerPoint (.pptx)
+  - Set topic and custom outline
+  - Track project status and history
 
-- **🔍 Intelligent Matching**
-  - Semantic job-candidate matching (not just keywords)
-  - Match score (0-10) with detailed justification
-  - Skill gap analysis (matched vs missing skills)
-  - Experience requirement validation
+- **🤖 AI-Powered Outline Generation**
+  - One-click AI outline suggestions
+  - 6-8 sections for Word documents
+  - 8-10 slides for PowerPoint presentations
+  - Customizable after generation
 
-- **💬 Interactive Q&A**
-  - Chat with individual resumes using RAG
-  - Context-aware responses
-  - Natural language queries
+- **📄 Intelligent Content Generation**
+  - Context-aware section generation
+  - Maintains consistency across document
+  - Professional writing style
+  - 200-400 words per section
 
-- **📊 Candidate Dashboard**
-  - View all uploaded candidates
-  - Sort by match score
-  - Filter by skills/experience
+- **🔄 Iterative Refinement**
+  - Natural language refinement prompts
+  - "Make more formal", "Add bullet points", etc.
+  - RAG-powered context retrieval
+  - Version history tracking
+
+- **💬 Document Q&A (Chat)**
+  - Ask questions about your document
+  - RAG retrieves relevant sections
+  - Natural language responses
+  - Context-aware answers
+
+- **📊 Analytics Dashboard**
+  - Project completion percentage
+  - Total word count
+  - Refinement statistics
+  - Feedback tracking (likes/dislikes)
+
+- **📥 Export & Download**
+  - Generate .docx for Word documents
+  - Generate .pptx for PowerPoint
+  - Formatted and ready to use
+  - Includes title page and sections
 
 ---
 
@@ -149,134 +229,341 @@ response = gemini_client.models.generate_content(prompt)
 
 ### Backend
 ```python
-FastAPI          # Web framework
-Google Gemini    # LLM (text generation)
-LangChain        # RAG framework
-ChromaDB         # Vector database
-PyPDF            # PDF parsing
-Pydantic         # Data validation
+FastAPI           # Web framework
+Google Gemini     # LLM (Gemini 2.0 Flash Lite)
+LangChain         # RAG framework
+ChromaDB          # Vector database
+SQLAlchemy        # ORM for SQL database
+python-docx       # Word document generation
+python-pptx       # PowerPoint generation
+JWT + bcrypt      # Authentication
+Pydantic          # Data validation
 ```
 
 ### Frontend
 ```typescript
-React 18         # UI framework
-TypeScript       # Type safety
-Tailwind CSS     # Styling
-Lucide Icons     # Icon library
-Vite             # Build tool
+React 18          # UI framework
+TypeScript        # Type safety
+Tailwind CSS      # Styling
+Lucide Icons      # Icon library
+Vite              # Build tool
 ```
 
+---
 
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Python 3.10+
+- Node.js 18+
+- Google Gemini API Key
+
+### Installation
+
+#### 1. Clone the Repository
+
+```bash
+git clone https://github.com/yourusername/oceanai-document-generator.git
+cd oceanai-document-generator
+```
+
+#### 2. Backend Setup
+
+```bash
+cd backend
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Create .env file
+cat > .env << EOF
+GEMINI_API_KEY=your_gemini_api_key_here
+SECRET_KEY=your-secret-key-change-in-production
+DATABASE_URL=sqlite:///./oceanai.db
+CHROMA_PATH=./chroma_db
+EOF
+
+# Run backend
+python main.py
+```
+
+Backend will run at: `http://localhost:8000`
+
+#### 3. Frontend Setup
+
+```bash
+cd frontend
+
+# Install dependencies
+npm install
+
+# Run frontend
+npm run dev
+```
+
+Frontend will run at: `http://localhost:5173`
 
 ---
 
 ## 🤖 LLM Prompts & Prompt Engineering
 
-### 1. Resume Data Extraction Prompt
+### 1. AI Outline Generation Prompt
 
 ```python
-EXTRACTION_PROMPT = """
-Extract candidate information from this resume as JSON.
+OUTLINE_PROMPT = """
+You are a professional document outline generator.
 
-Resume:
-{resume_text}
+Create a detailed outline for a {document_type} document about: {topic}
 
-Return this JSON (only JSON, no extra text):
-{
-  "name": "Full Name",
-  "email": "email@example.com",
-  "skills": ["Python", "Java", "React"],
-  "experience_years": 3,
-  "education": ["B.Tech Computer Science", "XYZ University"]
-}
+You MUST create exactly {count} {section_type}. Each section must have a title and description.
 
-Rules:
-- name: Get from top of resume
-- email: Extract email address
-- skills: All technical skills as array
-- experience_years: Total years as number
-- education: Degrees/schools as array
+Return ONLY a valid JSON array with exactly {count} items, no markdown, no explanation:
+[
+  {"title": "Section Title 1", "description": "What this section covers"},
+  {"title": "Section Title 2", "description": "What this section covers"},
+  ...
+]
+
+Generate exactly {count} {section_type} now:
 """
 ```
 
+**Prompt Engineering Techniques:**
+- ✅ Clear instruction on output format (JSON only)
+- ✅ Exact count specification
+- ✅ No markdown constraint to avoid parsing issues
+- ✅ Structured output for reliable parsing
 
-### 2. Job-Candidate Matching Prompt
+### 2. Content Generation Prompt
 
 ```python
-MATCHING_PROMPT = """
-Compare candidate with job and return JSON only.
+GENERATION_PROMPT = """
+You are a professional business document writer specializing in creating 
+high-quality, well-structured content.
 
-Job: {job_title}
-Description: {job_description}
-Required Skills: {required_skills}
-Required Experience: {experience_years} years
+Generate professional content for the following section.
 
-Candidate: {candidate_name}
-Skills: {candidate_skills}
-Experience: {candidate_experience} years
+DOCUMENT TOPIC: {topic}
+SECTION TITLE: {title}
+SECTION TYPE: {section_type}
 
-Return only this JSON (no markdown, no extra text):
-{
-  "match_score": 7.5,
-  "justification": "Plain text summary in 2-3 sentences without asterisks",
-  "matched_skills": ["Python", "FastAPI"],
-  "missing_skills": ["Kubernetes"],
-  "experience_match": true
-}
+Previous Context:
+{context}
 
-Scoring Guide:
-- 9-10: Perfect fit, exceeds requirements
-- 7-8: Strong fit, meets most requirements
-- 5-6: Moderate fit, some gaps
-- 3-4: Weak fit, significant gaps
-- 0-2: Poor fit, major misalignment
+Requirements:
+- Write clear, professional content (200-400 words)
+- Use proper paragraphs and structure
+- Be specific and informative
+- Maintain consistency with previous sections
+- Write in plain text without markdown formatting
 
-CRITICAL: Use plain text only, no markdown formatting.
+Content:
 """
 ```
 
+**Prompt Engineering Techniques:**
+- ✅ Context injection (previous sections via RAG)
+- ✅ Word count guidance (200-400 words)
+- ✅ Consistency enforcement
+- ✅ Plain text requirement for reliable formatting
 
+### 3. Content Refinement Prompt
 
-### 3. RAG Question-Answering Prompt
+```python
+REFINEMENT_PROMPT = """
+You are refining a section of a business document.
+
+Previous related content:
+{context}
+
+Current content to refine:
+{original}
+
+User's refinement request:
+{refinement_prompt}
+
+Provide the refined content below. Write in plain text without markdown formatting.
+
+Refined content:
+"""
+```
+
+**Prompt Engineering Techniques:**
+- ✅ RAG context inclusion (related sections)
+- ✅ User intent preservation
+- ✅ Plain text enforcement
+- ✅ Context-aware refinement
+
+### 4. Document Q&A Prompt
 
 ```python
 QA_PROMPT = """
-Use the following context from the candidate's resume to answer the question.
+You are analyzing a business document project.
 
-IMPORTANT: 
-- Answer based ONLY on the provided context
-- If information is not in context, say "This information is not available in the resume"
-- Provide specific details (years, companies, technologies)
-- Keep answers concise but informative
-- Use plain text without markdown formatting
+Project Topic: {topic}
+Document Type: {document_type}
 
-Context from resume:
+Relevant sections:
 {context}
 
-Question: {question}
+User Question: {question}
 
-Answer (plain text only):
+Provide a helpful answer based on the document content. 
+Write in plain text without markdown formatting.
+
+Answer:
 """
 ```
 
-
-
+**Prompt Engineering Techniques:**
+- ✅ Project context setting
+- ✅ RAG-retrieved relevant sections
+- ✅ Instruction to stay grounded in context
+- ✅ Natural language response
 
 ---
 
+## 📡 API Reference
+
+### Authentication
+
+#### Register User
+```http
+POST /api/auth/register
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "securepassword",
+  "full_name": "John Doe"
+}
+```
+
+#### Login
+```http
+POST /api/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "securepassword"
+}
+```
+
+### Projects
+
+#### Create Project
+```http
+POST /api/projects
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "title": "Q4 Business Plan",
+  "document_type": "docx",
+  "main_topic": "Strategic planning for Q4 2025"
+}
+```
+
+#### Get Project Details
+```http
+GET /api/projects/{project_id}
+Authorization: Bearer {token}
+```
+
+#### Update Project Configuration
+```http
+PUT /api/projects/{project_id}/config
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "configuration": {
+    "sections": [
+      {"title": "Introduction", "description": "Overview"},
+      {"title": "Analysis", "description": "Market analysis"}
+    ]
+  }
+}
+```
+
+### AI Features
+
+#### Generate AI Outline
+```http
+POST /api/suggest-outline-direct
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "topic": "Digital transformation strategy",
+  "document_type": "docx"
+}
+```
+
+#### Generate Content
+```http
+POST /api/projects/{project_id}/generate
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "section_id": "section-1"  // Optional: generate specific section
+}
+```
+
+#### Refine Content
+```http
+POST /api/projects/{project_id}/refine
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "section_id": "section-1",
+  "prompt": "Make this more formal and add bullet points"
+}
+```
+
+#### Chat with Document
+```http
+POST /api/projects/{project_id}/chat
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "project_id": 1,
+  "question": "What are the key points in the introduction?"
+}
+```
+
+### Export
+
+#### Export Document
+```http
+GET /api/projects/{project_id}/export
+Authorization: Bearer {token}
+```
+
+Returns: Binary file (.docx or .pptx)
+
+---
 
 ## 📁 Project Structure
 
 ```
-smart-resume-screener/
+oceanai-document-generator/
 ├── backend/
 │   ├── main.py                 # FastAPI application
 │   ├── requirements.txt        # Python dependencies
 │   ├── .env                    # Environment variables
 │   ├── .env.example           # Environment template
-│   ├── uploads/               # Uploaded resumes (gitignored)
-│   ├── chroma_db/             # Vector database (gitignored)
-│   └── test_fixes.py          # Test suite
+│   ├── oceanai.db             # SQLite database (gitignored)
+│   └── chroma_db/             # Vector database (gitignored)
 │
 ├── frontend/
 │   ├── src/
@@ -291,11 +578,8 @@ smart-resume-screener/
 │   └── postcss.config.js
 │
 ├── docs/
-│   ├── ARCHITECTURE.md        # Detailed architecture
-│   ├── RAG_PIPELINE.md        # RAG implementation details
-│   ├── PROMPTS.md             # LLM prompt engineering guide
-│   ├── TROUBLESHOOTING.md     # Common issues & solutions
-│   └── API_GUIDE.md           # Complete API reference
+│   ├── images/                # Screenshots
+│   └── README.md              # Additional documentation
 │
 ├── .gitignore
 ├── LICENSE
@@ -304,40 +588,102 @@ smart-resume-screener/
 
 ---
 
-## 📸 Screenshots
+## 🐛 Troubleshooting
 
-### Upload Interface
-![Upload Screenshot](docs/images/Screenshot%202025-10-17%20135836.png)
-*Upload Resume*
+### Common Issues
 
-### Match Results
-![Match Screenshot](docs/images/Screenshot%202025-10-17%20135951.png)
-*AI-powered matching with scores, justifications, and skill analysis*
+#### 1. "AI Suggest Outline returns only 2 suggestions"
 
-### Interactive Chat
-![Chat Screenshot](docs/images/Screenshot%202025-10-17%20140345.png)
-*RAG-powered Q&A for deep-dive candidate exploration*
+**Problem:** Gemini API response isn't being parsed correctly.
+
+**Solution:**
+```python
+# Backend automatically fills to 6/8 sections if AI returns fewer
+# Check backend console for debug logs:
+# 🤖 Raw Gemini response: ...
+# 🧹 Cleaned response: ...
+# ✅ Successfully parsed X suggestions
+```
+
+#### 2. "Token expired" error
+
+**Problem:** JWT token has expired after 7 days.
+
+**Solution:** Log out and log back in to get a new token.
+
+#### 3. Content generation fails
+
+**Problem:** Gemini API rate limit or connection issue.
+
+**Solution:**
+- Check GEMINI_API_KEY in .env
+- Wait 1 minute and retry
+- Check backend console for specific error
+
+#### 4. Export fails with "No content to export"
+
+**Problem:** Content hasn't been generated yet.
+
+**Solution:** Click "Generate Content" before exporting.
 
 ---
 
+## 🔒 Security Features
+
+- **JWT Authentication:** Secure token-based auth with 7-day expiry
+- **Password Hashing:** bcrypt with salt for secure password storage
+- **CORS Protection:** Configured allowed origins
+- **Input Validation:** Pydantic models for all API inputs
+- **SQL Injection Protection:** SQLAlchemy ORM parameterized queries
+
+---
+
+## 🎨 UI/UX Features
+
+- **Responsive Design:** Works on desktop, tablet, and mobile
+- **Real-time Feedback:** Loading states for all async operations
+- **Error Handling:** User-friendly error messages
+- **Progress Indicators:** Spinners and completion percentages
+- **Gradient UI:** Modern blue-purple gradient theme
+- **Version Display:** Shows version history for each section
+
+---
+
+## 📊 Performance Optimizations
+
+- **Chunked Generation:** Generates sections individually to avoid timeouts
+- **Vector Caching:** ChromaDB caches embeddings for fast retrieval
+- **Rate Limiting:** Built-in retry logic for API failures
+- **Lazy Loading:** Projects loaded on-demand
+- **Optimistic Updates:** UI updates before backend confirmation
+
+---
 
 ## 🙏 Acknowledgments
 
-- **Google Gemini** for powerful LLM capabilities
+- **Google Gemini** for powerful LLM capabilities and embeddings
 - **LangChain** for RAG framework
-- **ChromaDB** for vector storage
+- **ChromaDB** for efficient vector storage
 - **FastAPI** for elegant API design
 - **React** community for UI components
+- **Tailwind CSS** for beautiful styling
 
 ---
 
 ## 📞 Contact & Support
-- **Email**: kshitijdalvi22@gmail.com
 
+- **Developer:** Your Name
+- **Email:** your.email@example.com
+- **GitHub:** [@yourusername](https://github.com/kshitijdalvi4)
 
 ---
 
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
 
 **Made with ❤️ using Google Gemini and LangChain**
 
-*Last updated: October 2025*
+*Last updated: November 2025*
