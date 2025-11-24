@@ -43,8 +43,8 @@ import bcrypt
 # CONFIGURATION
 # ============================================================================
 
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyCTmZaq2CM-5EOS3YYrhFosl5yweDmo0F4")
-SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-change-in-production-oceanai-2025")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "KEY")
+SECRET_KEY = os.getenv("SECRET_KEY", "OCEAN")
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./oceanai.db")
 CHROMA_PATH = os.getenv("CHROMA_PATH", "./chroma_db")
 
