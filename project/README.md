@@ -672,8 +672,8 @@ oceanai-document-generator/
 
 ## 📞 Contact & Support
 
-- **Developer:** Your Name
-- **Email:** your.email@example.com
+- **Developer:** Kshitij Dalvi
+- **Email:** kshitijdalvi22@gmail.com
 - **GitHub:** [@yourusername](https://github.com/kshitijdalvi4)
 
 ---
