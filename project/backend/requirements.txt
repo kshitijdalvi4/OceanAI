@@ -49,7 +49,7 @@ aiofiles==23.2.1
 
 fastapi==0.119.0
 transformers==4.56.0
-torch==2.7.1+cu118
+torch==2.7.1
 
 pandas==2.3.2
 
