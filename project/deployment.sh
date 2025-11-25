@@ -19,13 +19,14 @@ python3.11 -m venv ~/oceanai/venv
 source ~/oceanai/venv/bin/activate
 
 # Install Python dependencies
-pip install -r ~/oceanai/OceanAI/backend/requirements.txt
+pip install -r ~/OceanAI/backend/requirements.txt
 
 #App server
 pip install gunicorn
 
 # Build frontend
-cd ~/oceanai/OceanAI/project/frontend/
+cd ~/OceanAI/project/frontend/
+
 npm install
 npm run build
 
@@ -42,7 +43,7 @@ server {
     server_name codemos-services.co.in www.codemos-services.co.in;
     
     # Frontend - Serve React build
-    root /home/ubuntu/oceanai/OceanAI/project/frontend/dist;
+    root /home/ubuntu/OceanAI/project/frontend/dist;
     index index.html;
     
     location / {
@@ -142,9 +143,9 @@ sudo systemctl enable oceanai-gunicorn
 sudo systemctl start oceanai-gunicorn
 
 # Set permissions for frontend
-sudo chown -R ubuntu:www-data /home/ubuntu/oceanai/OceanAI/project/frontend/dist
-sudo chmod -R 755 /home/ubuntu/oceanai/OceanAI/project/frontend/dist
-sudo chmod 755 /home/ubuntu ~/oceanai ~/oceanai/OceanAI ~/oceanai/OceanAI/project/frontend
+sudo chown -R ubuntu:www-data /home/ubuntu/OceanAI/project/frontend/dist
+sudo chmod -R 755 /home/ubuntu/OceanAI/project/frontend/dist
+sudo chmod 755 /home/ubuntu  ~/OceanAI ~/OceanAI/project/frontend
 
 # Restart services
 sudo systemctl restart nginx
