@@ -19,7 +19,7 @@ python3.11 -m venv ~/oceanai/venv
 source ~/oceanai/venv/bin/activate
 
 # Install Python dependencies
-pip install -r ~/OceanAI/backend/requirements.txt
+pip install -r ~/OceanAI/project/backend/requirements.txt
 
 #App server
 pip install gunicorn
@@ -120,7 +120,7 @@ After=network.target
 [Service]
 User=ubuntu
 Group=www-data
-WorkingDirectory=/home/ubuntu/oceanai/OceanAI/backend
+WorkingDirectory=/home/ubuntu/OceanAI/project/backend
 Environment="PATH=/home/ubuntu/oceanai/venv/bin"
 ExecStart=/home/ubuntu/oceanai/venv/bin/gunicorn main:app \
   -k uvicorn.workers.UvicornWorker \
