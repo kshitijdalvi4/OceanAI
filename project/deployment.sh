@@ -20,10 +20,12 @@ source ~/oceanai/venv/bin/activate
 
 # Install Python dependencies
 pip install -r ~/oceanai/OceanAI/backend/requirements.txt
+
+#App server
 pip install gunicorn
 
 # Build frontend
-cd ~/oceanai/OceanAI/frontend/
+cd ~/oceanai/OceanAI/project/frontend/
 npm install
 npm run build
 
@@ -31,6 +33,8 @@ npm run build
 cd ~/oceanai
 
 # Create Nginx configuration
+
+# -- etc , bin , var  System-Level
 nginx_file_path="/etc/nginx/sites-available/oceanai.conf"
 sudo bash -c "cat > $nginx_file_path << 'EOF'
 server {
@@ -38,7 +42,7 @@ server {
     server_name codemos-services.co.in www.codemos-services.co.in;
     
     # Frontend - Serve React build
-    root /home/ubuntu/oceanai/OceanAI/frontend/dist;
+    root /home/ubuntu/oceanai/OceanAI/project/frontend/dist;
     index index.html;
     
     location / {
@@ -82,6 +86,8 @@ server {
 EOF"
 
 # Enable site
+
+# ln = link , -sf forceful link
 sudo ln -sf /etc/nginx/sites-available/oceanai.conf /etc/nginx/sites-enabled/
 sudo rm -f /etc/nginx/sites-enabled/default
 
@@ -136,9 +142,9 @@ sudo systemctl enable oceanai-gunicorn
 sudo systemctl start oceanai-gunicorn
 
 # Set permissions for frontend
-sudo chown -R ubuntu:www-data /home/ubuntu/oceanai/OceanAI/frontend/dist
-sudo chmod -R 755 /home/ubuntu/oceanai/OceanAI/frontend/dist
-sudo chmod 755 /home/ubuntu ~/oceanai ~/oceanai/OceanAI ~/oceanai/OceanAI/frontend
+sudo chown -R ubuntu:www-data /home/ubuntu/oceanai/OceanAI/project/frontend/dist
+sudo chmod -R 755 /home/ubuntu/oceanai/OceanAI/project/frontend/dist
+sudo chmod 755 /home/ubuntu ~/oceanai ~/oceanai/OceanAI ~/oceanai/OceanAI/project/frontend
 
 # Restart services
 sudo systemctl restart nginx
